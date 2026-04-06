@@ -4,13 +4,6 @@
 
 seed: 42
 
-# --- Paths -----------------------------------------------------------
-data:
-  data_path: "data/Data_sel_.csv"
-  encoding: "cp949"
-  # Optional: site-to-river mapping for spatial independence check
-  site_river_path: null   # e.g. "data/Sites.csv"
-
 # --- Variables --------------------------------------------------------
 variables:
   predictors:
