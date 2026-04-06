@@ -120,6 +120,3 @@ Input (13 features)
 ```
 
 The hidden-layer width shrinks by `ratio` at each layer, creating a narrowing (funnel) architecture. The activation function and all architectural hyperparameters are optimised via TPE.
-## License
-
-[Choose a license, e.g., MIT, Apache 2.0]
