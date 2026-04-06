@@ -1,0 +1,69 @@
+# ============================================================
+# Configuration for river-impairment-mlp
+# ============================================================
+
+seed: 42
+
+# --- Paths -----------------------------------------------------------
+data:
+  data_path: "data/Data_sel_.csv"
+  encoding: "cp949"
+  # Optional: site-to-river mapping for spatial independence check
+  site_river_path: null   # e.g. "data/Sites.csv"
+
+# --- Variables --------------------------------------------------------
+variables:
+  predictors:
+    - "탁도(NTU)"
+    - "여울(%)"
+    - "세립질하상(%)"
+    - "기질매몰도(%)"
+    - "AFDM(mg/cm2)"
+    - "TN(mg/L)"
+    - "TP(mg/L)"
+    - "전기전도도(uS/cm)"
+    - "BOD(mg/L)"
+    - "하천흐름의 단순화"
+    - "유속(cm/sec)"
+    - "DO(mg/L)"
+    - "평균수심(cm)"
+
+  # English labels for plots (same order as predictors)
+  predictor_labels:
+    - "Turbidity"
+    - "Riffle"
+    - "Fine substrate"
+    - "Sediment embedding"
+    - "AFDM"
+    - "T-N"
+    - "T-P"
+    - "EC"
+    - "BOD"
+    - "Connectivity"
+    - "Velocity"
+    - "DO"
+    - "Depth"
+
+  targets:
+    - "TDI_훼손"
+    - "BMI_훼손"
+    - "FAI_훼손"
+
+# --- Spatiotemporal split ---------------------------------------------
+split:
+  train_years: [2021]
+  test_years:  [2022, 2023]
+  year_col: "연도"
+  site_col: "조사구간명"
+
+# --- Training ---------------------------------------------------------
+training:
+  epochs: 200
+  n_folds: 5
+  max_evals: 100
+
+# --- Output -----------------------------------------------------------
+output:
+  results_dir: "results"
+  model_dir: "results/models"
+  shap_dir: "results/shap"

@@ -1,15 +1,149 @@
-# Impairment-diagnosis-modeling---Ecological-informatics
-This repository contains the official implementation for the study:   **"Explainable Machine Learning for Diagnosing Ecological Impairment in Streams Using Reach-Scale Biological and Environmental Data"** (Published/Under Review in *Ecological Informatics*).
+# river-impairment-mlp
 
-## 📌 Project Overview
-This study develops a machine learning framework to diagnose ecological impairment in stream ecosystems using reach-scale data. We employ Multilayer Perceptrons (MLP) and provide model interpretability through SHAP (SHapley Additive ExPlanations) to identify key stressors for Diatoms (TDI), Benthic Macroinvertebrates (BMI), and Fish (FAI).
+MLP-based binary classification model for diagnosing river ecosystem impairment using biological and physicochemical indicators.
 
-## 📂 Repository Structure
-- `notebooks/`: Jupyter notebooks for Exploratory Data Analysis (EDA) and SHAP summary plots.
-- `src/`: Core Python scripts for model training, hyperparameter tuning, and evaluation.
-- `models/`: Saved model weights (.pth or .pkl) for reproducibility.
-- `results/`: Output figures and performance metrics.
-- `requirements.txt`: List of required Python packages and versions.
+This repository provides the source code to reproduce the results presented in the paper:
 
-## 🚀 Getting Started
-To ensure reproducibility, we recommend using a virtual environment (e.g., Conda).
+> **[Paper Title]**
+> [Authors], [Journal], [Year]
+
+## Overview
+
+The model classifies monitoring sites as *impaired* or *non-impaired* based on three biological assessment indices:
+
+| Target | Description |
+|--------|-------------|
+| **TDI** | Trophic Diatom Index |
+| **BMI** | Benthic Macroinvertebrate Index |
+| **FAI** | Fish Assessment Index |
+
+Key features:
+
+- **Narrowing MLP architecture** with configurable depth, width shrinkage ratio, and activation functions.
+- **Hyperparameter optimisation** via TPE (Tree-structured Parzen Estimator) with stratified K-fold cross-validation.
+- **Spatiotemporal train–test split** ensuring temporal and spatial independence between training and evaluation data.
+- **SHAP explainability** through KernelExplainer (summary and waterfall plots).
+
+## Project Structure
+
+```
+river-impairment-mlp/
+├── configs/
+│   └── default.yaml              # All hyperparameters and paths
+├── river_impairment/
+│   ├── __init__.py
+│   ├── model.py                  # MLPImpairment model definition
+│   ├── data.py                   # Data loading, preprocessing, splitting
+│   ├── trainer.py                # TPE optimisation & training loop
+│   ├── metrics.py                # Classification metrics
+│   └── explainer.py              # SHAP analysis utilities
+├── train.py                      # CLI: train models
+├── evaluate.py                   # CLI: evaluate saved models
+├── explain.py                    # CLI: generate SHAP plots
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+## Requirements
+
+- Python 3.10+
+- CUDA-capable GPU (recommended)
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Data
+
+The dataset is available at **[DOI / URL]** (e.g., Zenodo, figshare).
+
+After downloading, place the CSV file(s) under `data/`:
+
+```
+data/
+├── Data_sel_.csv
+└── Sites.csv          # optional: site-to-river mapping
+```
+
+## Usage
+
+### 1. Training
+
+Run hyperparameter optimisation and train the best MLP model for each target:
+
+```bash
+python train.py --config configs/default.yaml
+```
+
+Results are saved to `results/`:
+- `results/models/{TARGET}_best.pkl` — best model weights, scaler, and metrics.
+- `results/{TARGET}_trials.csv` — all trial records from TPE optimisation.
+- `results/performance.csv` — aggregated train/test performance.
+
+### 2. Evaluation
+
+Re-evaluate saved models on the test set:
+
+```bash
+python evaluate.py --config configs/default.yaml
+```
+
+### 3. SHAP Explanation
+
+Generate SHAP summary and waterfall plots:
+
+```bash
+# All targets
+python explain.py --config configs/default.yaml
+
+# Single target
+python explain.py --config configs/default.yaml --target BMI_훼손
+```
+
+Plots are saved under `results/shap/`.
+
+## Configuration
+
+All parameters are managed through `configs/default.yaml`:
+
+| Section | Key parameters |
+|---------|---------------|
+| `data` | `data_path`, `encoding`, `site_river_path` |
+| `variables` | `predictors`, `predictor_labels`, `targets` |
+| `split` | `train_years`, `test_years` |
+| `training` | `epochs`, `n_folds`, `max_evals` |
+| `output` | `results_dir`, `model_dir`, `shap_dir` |
+
+## Model Architecture
+
+```
+Input (13 features)
+  → Linear(13, hidden_dim) → Dropout(0.2)
+  → Linear(hidden_dim, hidden_dim × ratio) → Activation
+  → Linear(…, … × ratio) → Activation
+  → ...
+  → Linear(last_dim, 2) → Softmax
+```
+
+The hidden-layer width shrinks by `ratio` at each layer, creating a narrowing (funnel) architecture. The activation function and all architectural hyperparameters are optimised via TPE.
+
+## Citation
+
+If you use this code, please cite:
+
+```bibtex
+@article{your_citation_key,
+  title   = {},
+  author  = {},
+  journal = {},
+  year    = {},
+  doi     = {}
+}
+```
+
+## License
+
+[Choose a license, e.g., MIT, Apache 2.0]
