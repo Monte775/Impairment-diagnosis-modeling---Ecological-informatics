@@ -4,8 +4,8 @@ MLP-based binary classification model for diagnosing river ecosystem impairment 
 
 This repository provides the source code to reproduce the results presented in the paper:
 
-> **[Paper Title]**
-> [Authors], [Journal], [Year]
+> Explainable Machine Learning for Diagnosing Ecological Impairment in Streams Using Reach-Scale Biological and Environmental Data(On the Review)
+> Ecological Informatics, 2026
 
 ## Overview
 
@@ -21,8 +21,7 @@ Key features:
 
 - **Narrowing MLP architecture** with configurable depth, width shrinkage ratio, and activation functions.
 - **Hyperparameter optimisation** via TPE (Tree-structured Parzen Estimator) with stratified K-fold cross-validation.
-- **Spatiotemporal train–test split** ensuring temporal and spatial independence between training and evaluation data.
-- **SHAP explainability** through KernelExplainer (summary and waterfall plots).
+- **SHAP explainability** through DeepExplainer (summary and waterfall plots).
 
 ## Project Structure
 
@@ -58,15 +57,7 @@ pip install -r requirements.txt
 
 ## Data
 
-The dataset is available at **[DOI / URL]** (e.g., Zenodo, figshare).
-
-After downloading, place the CSV file(s) under `data/`:
-
-```
-data/
-├── Data_sel_.csv
-└── Sites.csv          # optional: site-to-river mapping
-```
+Data will be made available on request.
 
 ## Usage
 
@@ -129,21 +120,6 @@ Input (13 features)
 ```
 
 The hidden-layer width shrinks by `ratio` at each layer, creating a narrowing (funnel) architecture. The activation function and all architectural hyperparameters are optimised via TPE.
-
-## Citation
-
-If you use this code, please cite:
-
-```bibtex
-@article{your_citation_key,
-  title   = {},
-  author  = {},
-  journal = {},
-  year    = {},
-  doi     = {}
-}
-```
-
 ## License
 
 [Choose a license, e.g., MIT, Apache 2.0]
